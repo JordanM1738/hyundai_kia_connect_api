@@ -7,7 +7,7 @@ import datetime as dt
 import json
 import logging
 import pytz
-import cloudscraper
+import requests
 
 
 from dateutil.tz import tzoffset
@@ -63,9 +63,9 @@ class KiaUvoApiCA(ApiImpl):
         self.API_HEADERS = {
             "content-type": "application/json",
             "accept": "application/json, text/plain, */*",
-            "accept-encoding": "gzip, deflate, br",
+            "Accept-Encoding": "gzip",
             "accept-language": "en-US,en;q=0.9",
-            "user-agent": "okhttp/4.12.0",
+            "User-Agent": "okhttp/4.12.0",
             "host": self.BASE_URL,
             "client_id": "HATAHSPACA0232141ED9722C67715A0B",
             "client_secret": "CLISCR01AHSPA",
@@ -83,7 +83,7 @@ class KiaUvoApiCA(ApiImpl):
     @property
     def sessions(self):
         if not self._sessions:
-            self._sessions = cloudscraper.Session()
+            self._sessions = requests.Session()
         return self._sessions
 
     def _check_response_for_errors(self, response: dict) -> None:
