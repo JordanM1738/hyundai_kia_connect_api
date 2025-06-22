@@ -32,7 +32,10 @@ setup(
         "Programming Language :: Python :: 3.10",
     ],
     description="Python Boilerplate contains all the boilerplate you need to create a Python package.",
-    install_requires=requirements,
+    install_requires=[
+        requirements,
+        'cloudscraper @ git+https://github.com/VeNoMouS/cloudscraper.git',
+    ],
     license="MIT license",
     long_description=long_description,
     include_package_data=True,

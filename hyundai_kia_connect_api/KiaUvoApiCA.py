@@ -60,29 +60,32 @@ class KiaUvoApiCA(ApiImpl):
 
         self.old_vehicle_status = {}
         self.API_URL: str = "https://" + self.BASE_URL + "/tods/api/"
+
+        local_tz_offset = dt.datetime.now(dt.timezone.utc).astimezone().strftime('%z')[0:3]
+
+        brand_header = "H" if BRANDS[brand] == BRAND_HYUNDAI else ("G" if BRANDS[brand] == BRAND_GENESIS else "kia")
+        user_agent = "MyHyundai/2.0.25 (iPhone; iOS 18.3; Scale/3.00)" if BRANDS[
+                                                                              brand] == BRAND_HYUNDAI else "okhttp/4.12.0"
+
         self.API_HEADERS = {
-            "content-type": "application/json",
-            "accept": "application/json",
-            "accept-encoding": "gzip",
-            "accept-language": "en-US,en;q=0.9",
-            "host": self.BASE_URL,
+            "Accept-Encoding": "gzip",
+            "brand": brand_header,
             "client_id": "HATAHSPACA0232141ED9722C67715A0B",
             "client_secret": "CLISCR01AHSPA",
+            "Connection": "Keep-Alive",
+            "Content-Type": "application/json",
             "from": "SPA",
+            "Host": self.BASE_URL,
             "language": "0",
-            "offset": "-5",
-            "sec-fetch-dest": "empty",
-            "sec-fetch-mode": "cors",
-            "sec-fetch-site": "same-origin",
+            "offset": local_tz_offset,
+            "User-Agent": user_agent
         }
         self._sessions = None
 
     @property
     def sessions(self):
         if not self._sessions:
-            self._sessions = cloudscraper.create_scraper(
-                browser={"custom": "okhttp/4.12.0"}
-            )
+            self._sessions = cloudscraper.create_scraper()
         return self._sessions
 
     def _check_response_for_errors(self, response: dict) -> None:
